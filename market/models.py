@@ -1,5 +1,22 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey, orm
+# from sqlalchemy.orm import relationship
 from market import Base
+
+class User(Base):
+    __tablename__ = 'users'
+
+    id = Column(Integer(), primary_key=True)
+    user_name = Column(String(30), nullable=False, unique=True)
+    email = Column(String(50), nullable=False, unique=True)
+    password = Column(String(60), nullable=False)
+    budget = Column(Integer(), nullable=False, default=1000)
+    items = orm.relationship('Item', backref='owned_user', lazy=True)
+
+    def __init__(self, user_name, email, password, budget=1000):
+        self.user_name = user_name
+        self.email = email
+        self.password = password
+        self.budget = budget
 
 class Item(Base):
     __tablename__ = 'items'
@@ -9,6 +26,7 @@ class Item(Base):
     price = Column(Integer(), nullable=False)
     barcode = Column(String(12), nullable=False, unique=True)
     description = Column(String(1024), nullable=False, unique=True)
+    owner = Column(Integer(), ForeignKey('users.id'))
 
     def __init__(self, name, price, barcode, description):
         self.name = name
@@ -17,4 +35,4 @@ class Item(Base):
         self.description = description
 
     def __repr__(self):
-        return f'<Item{self.id} {self.name} {self.price} {self.barcode} {self.description}>'
+        return f'Item {self.name} {self.price} {self.barcode} {self.description}'
