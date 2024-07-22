@@ -6,14 +6,14 @@ class User(Base):
     __tablename__ = 'users'
 
     id = Column(Integer(), primary_key=True)
-    user_name = Column(String(30), nullable=False, unique=True)
+    username = Column(String(30), nullable=False, unique=True)
     email = Column(String(50), nullable=False, unique=True)
     password = Column(String(60), nullable=False)
     budget = Column(Integer(), nullable=False, default=1000)
     items = orm.relationship('Item', backref='owned_user', lazy=True)
 
-    def __init__(self, user_name, email, password, budget=1000):
-        self.user_name = user_name
+    def __init__(self, username, email, password, budget=1000):
+        self.username = username
         self.email = email
         self.password = password
         self.budget = budget

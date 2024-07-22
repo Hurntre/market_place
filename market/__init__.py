@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker, declarative_base
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = '11c23e85b73743e4b6c7b14a'
 engine = create_engine("sqlite+pysqlite:///market/market.db", echo=True)
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 Base = declarative_base()

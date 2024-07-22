@@ -14,8 +14,11 @@ source virtual_env/bin/activate
 
 # install the dependencies
 
-python3 -m pip install flask
-
+pip install flask
+pip install flask-sqlalchemy
+pip install flask-wtf
+pip install wtforms
+pip install email_validator
 # set flask env variables
 
 ## if you are on macOS

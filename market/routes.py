@@ -1,7 +1,7 @@
-from market import app
-from flask import render_template
-from market.models import Item
-
+from market import app, db_session
+from flask import render_template, redirect, url_for
+from market.models import Item, User
+from market.forms import RegisterForm
 
 
 @app.route('/')
@@ -15,11 +15,17 @@ def market_page():
   items = Item.query.all()
   return render_template('market.html', items=items)
 
-@app.route('/about/<username>')
-def about_page(username):
-    return f'<h1>This is the about page of {username}</h1>'
+@app.route('/register', methods=['GET', 'POST'])
+def register_page():
+  form = RegisterForm()
 
-
-# item = Item('phone', 500, '893212299897', 'A UK used Iphone 30')
-# db_session.add(item)
-# db_session.commit()
+  if form.validate_on_submit():
+    user_to_create = User(form.username.data, form.email_address.data, form.password1.data)
+    db_session.add(user_to_create)
+    db_session.commit()
+    return redirect(url_for('market_page'))
+   
+  if form.errors != {}: #if there are errors from the validations
+    for err_msg in form.errors.values():
+      print(f'There was an error while attempting to register new user: {err_msg}')
+  return render_template('register.html', form=form)
