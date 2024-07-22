@@ -20,6 +20,7 @@ pip install flask-wtf
 pip install wtforms
 pip install email_validator
 pip install flask_bcrypt
+pip install flask_login
 # set flask env variables
 
 ## if you are on macOS
