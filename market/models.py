@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, orm
 # from sqlalchemy.orm import relationship
-from market import Base, bcrypt, login_manager
+from market import Base, bcrypt, login_manager, db_session
 from flask_login import UserMixin
 
 @login_manager.user_loader
@@ -33,6 +33,10 @@ class User(Base, UserMixin):
 
     def check_password_correction(self, attempted_password):
         return bcrypt.check_password_hash(self.password, attempted_password)
+    
+    def can_purchase(self, item):
+        return self.budget >= item.price
+
 class Item(Base):
     __tablename__ = 'items'
 
@@ -51,3 +55,8 @@ class Item(Base):
 
     def __repr__(self):
         return f'Item {self.name} {self.price} {self.barcode} {self.description}'
+    
+    def buy(self, user):
+        self.owner = user.id
+        user.budget -= self.price
+        db_session.commit()
