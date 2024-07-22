@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, orm
 # from sqlalchemy.orm import relationship
-from market import Base
+from market import Base, bcrypt
 
 class User(Base):
     __tablename__ = 'users'
@@ -12,11 +12,20 @@ class User(Base):
     budget = Column(Integer(), nullable=False, default=1000)
     items = orm.relationship('Item', backref='owned_user', lazy=True)
 
-    def __init__(self, username, email, password, budget=1000):
+    # @property
+    # def password(self):
+    #     return self.password
+    
+    # @password.setter
+    # def password(self, plain_text_password):
+    #     self.password_hash = bcrypt.generate_password_hash(plain_text_password).decode('utf-8')
+
+    def __init__(self, username, email, password, budget=None):
         self.username = username
         self.email = email
-        self.password = password
-        self.budget = budget
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+        if budget:
+            self.budget = budget
 
 class Item(Base):
     __tablename__ = 'items'
