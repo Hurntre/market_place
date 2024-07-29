@@ -21,7 +21,7 @@ export FLASK_DEBUG=1
 
 ## if you are on windows
 set FLASK_APP=market
-export FLASK_DEBUG=1
+set FLASK_DEBUG=1
 
 the FLASK_DEBUG=1 ensures that the app restarts automatically anytime you make a change
 
